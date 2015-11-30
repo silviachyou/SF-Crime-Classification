@@ -205,7 +205,7 @@ var upload = function(){
 				//console.log(results);
 				console.log(results.data.length);
 				//for(var i = 0; i< results.data.length; i++){
-				for(var i = 0; i< 30000; i++){
+				for(var i = 0; i< 10000; i++){
 					d = results.data[i];
 					//console.log(parseFloat(d[8]), parseFloat(d[7]));
 					heatmapData.push(new google.maps.LatLng(parseFloat(d[8]), parseFloat(d[7])));
