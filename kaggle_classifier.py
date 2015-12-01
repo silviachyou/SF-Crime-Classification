@@ -89,7 +89,7 @@ print "Running Random Forest Classifier...\n"
 # In[37]:
 
 from sklearn.ensemble import RandomForestClassifier
-model = RandomForestClassifier(n_estimators=50, max_depth=None)
+model = RandomForestClassifier(n_estimators=150, max_depth=20)
 model.fit(train_data[features], train_data['crime'])
 #predicted = np.array(model.predict_proba(valid_data[features]))
 #print log_loss(valid_data['crime'], predicted) 
@@ -99,7 +99,7 @@ print "Preprocessing Test Data...\n"
 
 # Change to the name of the test file you are using:
 
-test=pd.read_csv('kaggle_test_1.csv', parse_dates = ['Dates'])
+test=pd.read_csv('test.csv', parse_dates = ['Dates'])
 
 test.loc[test.X == -120.5, 'X'] = max_X
 test.loc[test.Y == 90,'Y'] = max_Y
@@ -130,9 +130,7 @@ predicted = model.predict_proba(test_data[features])
 print "Writing results to file... \n"
 #Write results
 result=pd.DataFrame(predicted, columns=le_crime.classes_)
-result.to_csv('testResult.csv', index = True, index_label = 'Id' )
-
-
+result.to_csv('testResult1.csv', index = True, index_label = 'Id' )
 
 
 
