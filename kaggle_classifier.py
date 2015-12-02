@@ -36,12 +36,14 @@ min_X = min(train.X)
 
 # In[31]:
 
-train['grid_X'] = pd.DataFrame((train.X - min_X)/(max_X - min_X) * 8).astype(int)
+grid_size = 20
+
+train['grid_X'] = pd.DataFrame((train.X - min_X)/(max_X - min_X) * grid_size).astype(int)
 
 
 # In[32]:
 
-train['grid_Y'] = ((train.Y - min_Y)/(max_Y - min_Y) * 8).astype(int)
+train['grid_Y'] = ((train.Y - min_Y)/(max_Y - min_Y) * grid_size).astype(int)
 
 
 # In[33]:
@@ -76,7 +78,10 @@ features = ['hour_0','hour_1','hour_2','hour_3','hour_4','hour_5','hour_6','hour
             'hour_10','hour_11','hour_12','hour_13','hour_14','hour_15','hour_16','hour_17','hour_18','hour_19',
             'hour_20','hour_21','hour_22','hour_23','month_1','month_2','month_3','month_4','month_5','month_6',
             'month_7','month_8','month_9','month_10','month_11','month_12',
-            '0_X','1_X','2_X','3_X','4_X','5_X','6_X','7_X','0_Y','1_Y','2_Y','3_Y','4_Y','5_Y','6_Y','7_Y',
+            '0_X','1_X','2_X','3_X','4_X','5_X','6_X','7_X','8_X','9_X','10_X','11_X',
+            '12_X','13_X','14_X','15_X','16_X','17_X','18_X','19_X',
+            '0_Y','1_Y','2_Y','3_Y','4_Y','5_Y','6_Y','7_Y','8_Y','9_Y','10_Y','11_Y',
+            '12_Y','13_Y','14_Y','15_Y','16_Y','17_Y','18_Y','19_Y',
             'Friday', 'Monday', 'Saturday', 'Sunday', 'Thursday', 'Tuesday',
  'Wednesday', 'BAYVIEW', 'CENTRAL', 'INGLESIDE', 'MISSION',
  'NORTHERN', 'PARK', 'RICHMOND', 'SOUTHERN', 'TARAVAL', 'TENDERLOIN']
@@ -89,7 +94,7 @@ print "Running Random Forest Classifier...\n"
 # In[37]:
 
 from sklearn.ensemble import RandomForestClassifier
-model = RandomForestClassifier(n_estimators=150, max_depth=20)
+model = RandomForestClassifier(n_estimators=200, max_depth=20)
 model.fit(train_data[features], train_data['crime'])
 #predicted = np.array(model.predict_proba(valid_data[features]))
 #print log_loss(valid_data['crime'], predicted) 
@@ -115,8 +120,8 @@ hour = pd.get_dummies(hour,prefix="hour")
 month = test.Dates.dt.month
 month = pd.get_dummies(month,prefix="month")
 
-test['grid_X'] = ((test.X - min_X)/(max_X - min_X) * 8).astype(int)
-test['grid_Y'] = ((test.Y - min_Y)/(max_Y - min_Y) * 8).astype(int)
+test['grid_X'] = ((test.X - min_X)/(max_X - min_X) * grid_size).astype(int)
+test['grid_Y'] = ((test.Y - min_Y)/(max_Y - min_Y) * grid_size).astype(int)
 grid_features = pd.get_dummies(test.grid_X).join(pd.get_dummies(test.grid_Y),lsuffix="_X",rsuffix="_Y")
 
 test_data = pd.concat([hour, days, month, grid_features, district], axis=1)
@@ -130,7 +135,7 @@ predicted = model.predict_proba(test_data[features])
 print "Writing results to file... \n"
 #Write results
 result=pd.DataFrame(predicted, columns=le_crime.classes_)
-result.to_csv('testResult1.csv', index = True, index_label = 'Id' )
+result.to_csv('testResult.csv', index = True, index_label = 'Id' )
 
 
 
